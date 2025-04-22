@@ -119,7 +119,7 @@ clases = ["Angry", "Disgust", "Fear", "Happy", "Sad", "Surprise", "Neutral"]
 detector_rostro = cv2.CascadeClassifier(cv2.data.haarcascades + "haarcascade_frontalface_default.xml")
 
 # Capturar video desde la webcam
-video = cv2.VideoCapture(0)
+video = cv2.VideoCapture(1)
 
 while True:
     ret, frame = video.read()

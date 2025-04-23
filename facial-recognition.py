@@ -82,23 +82,23 @@ ModelCNN.save('EI_XD/archive/model/modelo_facial_recognition.h5') #Guardar el mo
 ModelCNN.save_weights('EI_XD/archive/model/modelo_facial_recognition.weights.h5') #Guardar los pesos del modelo
 '''
 #Imagen a clasificar
-img = "archive/archive(6)/test/happy/35856.png" #Ruta de la imagen a clasificar
+img = "archive/archive(6)/test/happy/35856.png" 
 
 
-altura, anchura = 50, 50 #Tamaño de la imagen
+altura, anchura = 50, 50 
+
 #Cargar el modelo, arquitectura y pesos
-
-modelo = load_model('archive/model/modelo_facial_recognition.h5') #Cargar el modelo
-modelo.load_weights('archive/model/modelo_facial_recognition.weights.h5') #Cargar los pesos del modelo
+modelo = load_model('archive/model/modelo_facial_recognition.h5') 
+modelo.load_weights('archive/model/modelo_facial_recognition.weights.h5') 
 
 #Transformar la imagen a clasificar
-imagen = load_img(img, target_size=(altura,anchura)) #Cargar la imagen
-imagen = img_to_array(imagen) #Convertir la imagen a array
-imagen = np.expand_dims(imagen, axis=0) #Expandir las dimensiones de la imagen
+imagen = load_img(img, target_size=(altura,anchura)) 
+imagen = img_to_array(imagen) 
+imagen = np.expand_dims(imagen, axis=0) 
 
 #Clasificar la imagen
-prediccion = modelo.predict(imagen) #Predecir la clase de la imagen
-print(prediccion) #Imprimir la predicción
+prediccion = modelo.predict(imagen)
+print(prediccion) 
 
 max = np.argmax(prediccion) # Obtener la clase con mayor probabilidad
 clases = ["Angry", "Disgust", "Fear", "Happy", "Sad", "Surprise", "Neutral"]
@@ -135,7 +135,7 @@ while True:
         rostro = cv2.resize(rostro, (50, 50))
         rostro = img_to_array(rostro)
         rostro = np.expand_dims(rostro, axis=0)
-        rostro = rostro / 255.0  # Normalización
+        rostro = rostro / 255.0 
 
         # Predecir la emoción
         prediccion = modelo.predict(rostro)

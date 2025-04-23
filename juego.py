@@ -2,6 +2,7 @@ import cv2
 import os
 import numpy as np
 from tkinter import *
+from tkinter import filedialog
 from PIL import Image, ImageTk
 from keras.models import load_model
 from keras.utils import img_to_array, load_img
@@ -14,7 +15,7 @@ clases = ["Angry", "Disgust", "Fear", "Happy", "Sad", "Surprise", "Neutral"]
 altura, anchura = 50, 50
 
 # --- Emociones del juego ---
-emociones_objetivo = ["Happy", "Sad", "Surprise", "Angry"]
+emociones_objetivo = ["Happy", "Sad", "Angry"]
 indice_actual = 0
 
 def clasificar_emocion(img_path):
@@ -58,6 +59,30 @@ def capturar_y_validar_emocion():
     else:
         resultado.set("Error al acceder a la cámara.")
 
+def seleccionar_y_validar_emocion():
+    global indice_actual
+    path_foto = filedialog.askopenfilename(filetypes=[("Imágenes", "*.jpg *.png *.jpeg")])
+    if not path_foto:
+        return  # usuario canceló
+
+    emocion_detectada = clasificar_emocion(path_foto)
+    emocion_esperada = emociones_objetivo[indice_actual]
+
+    print(f"Esperado: {emocion_esperada} | Detectado: {emocion_detectada}")
+
+    if emocion_detectada == emocion_esperada:
+        resultado.set("¡Correcto! 😀")
+        indice_actual += 1
+        if indice_actual >= len(emociones_objetivo):
+            emocion_label.config(text="¡Juego completado!")
+            boton_captura.config(state=DISABLED)
+            boton_archivo.config(state=DISABLED)
+            imagen_emocion_label.config(image="")
+        else:
+            actualizar_emocion()
+    else:
+        resultado.set(f"Incorrecto. Intenta mostrar: {emocion_esperada} 😅")
+
 def actualizar_emocion():
     emocion_esperada = emociones_objetivo[indice_actual]
     emocion_label.config(text=f"Imita esta emoción: {emocion_esperada}")
@@ -75,7 +100,7 @@ def actualizar_emocion():
 # --- Interfaz gráfica ---
 ventana = Tk()
 ventana.title("Juego de emociones")
-ventana.geometry("500x500")
+ventana.geometry("500x550")
 ventana.configure(bg="#202020")
 
 # --- Estilo de etiquetas ---
@@ -89,7 +114,10 @@ imagen_emocion_label = Label(ventana, bg="#202020")
 imagen_emocion_label.pack(pady=10)
 
 boton_captura = Button(ventana, text="📸 Capturar emoción", command=capturar_y_validar_emocion, font=fuente_normal, bg="#FF5722", fg="white", padx=10, pady=5)
-boton_captura.pack(pady=10)
+boton_captura.pack(pady=5)
+
+boton_archivo = Button(ventana, text="🖼 Evaluar imagen desde archivo", command=seleccionar_y_validar_emocion, font=fuente_normal, bg="#009688", fg="white", padx=10, pady=5)
+boton_archivo.pack(pady=5)
 
 resultado = StringVar()
 resultado_label = Label(ventana, textvariable=resultado, font=fuente_normal, fg="#00E676", bg="#202020")
